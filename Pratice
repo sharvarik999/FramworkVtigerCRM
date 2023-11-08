@@ -1,0 +1,98 @@
+public class Orginationandcontact {
+
+	
+		public static void main(String[] args) throws IOException {
+			// TODO Auto-generated method stub
+			WebDriver driver ;
+			
+			PropertyFileUtils futils = new PropertyFileUtils();
+			WebDriverUtils wutils = new WebDriverUtils ();
+			ExcelUtils eutils = new ExcelUtils();
+			
+			
+			// to read data from properties file
+   
+			String BROWSER = futils.getDataFromPropertyFile("Browser");
+			String Url = futils.getDataFromPropertyFile("url");
+			String USERNAME =futils.getDataFromPropertyFile("Username");
+			String PASSWORD = futils.getDataFromPropertyFile("Password");
+			
+			//to read data from excel for contact
+   
+			String lastname = eutils.getDataFromExcelFile("Sheet1", 1, 0);
+			String assigntocontact = eutils.getDataFromExcelFile("Sheet1", 1, 2);
+			// to read data from excel for org
+			String ogname = eutils.getDataFromExcelFile("Sheet1", 1, 1);
+			String assigntoorg = eutils.getDataFromExcelFile("Sheet1", 1, 2);
+			
+			
+			
+			if(BROWSER.equalsIgnoreCase("Chrome")) 
+			{
+			driver=new ChromeDriver();
+			
+			}
+			else if (BROWSER.equalsIgnoreCase("Edge"))
+			{
+				driver=new EdgeDriver();
+			}
+			else 
+			{
+				driver=new FirefoxDriver();
+			}
+	       
+			wutils.maximize(driver);
+			wutils.implicitwait(driver);
+		
+			
+			driver.get(Url);
+			driver.findElement(By.xpath("//input[@type='text']")).sendKeys(USERNAME);
+	        driver.findElement(By.xpath("//input[@type='password']")).sendKeys(PASSWORD);
+			driver.findElement(By.id("submitButton")).click();
+			
+			
+			
+			
+			
+		     
+		     
+		     System.out.println(lastname);
+		     driver.findElement(By.linkText("Contacts")).click();
+			 driver.findElement(By.xpath("//img[@alt='Create Contact...']")).click();
+			 driver.findElement(By.name("lastname")).sendKeys(lastname);
+			 driver.findElement(By.xpath("(//input[@name='assigntype'])[2]")).click();
+			 
+			 
+			 
+			
+		     System.out.println(assigntocontact);
+		     
+			WebElement assignto = driver.findElement(By.name("assigned_group_id"));
+			wutils.handledropdown(assignto, assigntocontact);
+		
+		 //  driver.findElement(By.xpath("//input[@class='crmbutton small save']")).click();
+		
+			
+			
+			
+			//organization
+			
+		     
+		     System.out.println(ogname);
+		     driver.findElement(By.linkText("Organizations")).click();
+		     driver.findElement(By.xpath("//img[@alt='Create Organization...']")).click();
+		     driver.findElement(By.name("accountname")).sendKeys(ogname);
+		     
+		     
+		     System.out.println(assigntoorg );
+		     driver.findElement(By.xpath("(//input[@name='assigntype'])[2]")).click();	
+			 WebElement assignto1 = driver.findElement(By.name("assigned_group_id"));
+			 wutils.handledropdown(assignto1, assigntoorg);
+				
+		      // driver.findElement(By.xpath("(//input[@class='crmbutton small save'])[2]")).click();
+			 
+			
+			
+	}
+
+}
